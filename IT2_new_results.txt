@@ -1,0 +1,28 @@
+S = 1
+Resultado da iteração s = 1 :(bound = -1.362577638959713, ncuts = 0, rounds = 1, total_time = 7.741926299999999, sep_time = 0.0003391, final_time = 7.7415872, status = OPTIMAL)
+S = 2
+Resultado da iteração s = 2 :(bound = -2.9705268328977845, ncuts = 50, rounds = 8, total_time = 19.719788799999996, sep_time = 0.9075769, final_time = 2.543846, status = OPTIMAL)
+S = 3
+Resultado da iteração s = 3 :(bound = -4.684648830577739, ncuts = 81, rounds = 8, total_time = 17.1686105, sep_time = 0.0040773, final_time = 4.1183182, status = OPTIMAL)
+S = 4
+Resultado da iteração s = 4 :(bound = -6.439560777002805, ncuts = 89, rounds = 9, total_time = 14.505166200000001, sep_time = 0.0060645000000000004, final_time = 1.6407389, status = OPTIMAL)
+S = 5
+Resultado da iteração s = 5 :(bound = -8.236760307761152, ncuts = 243, rounds = 12, total_time = 34.834643299999996, sep_time = 0.0098501, final_time = 2.9080513, status = OPTIMAL)
+S = 6
+Resultado da iteração s = 6 :(bound = -10.124705480079252, ncuts = 758, rounds = 26, total_time = 126.53016939999999, sep_time = 0.0805744, final_time = 7.2987143, status = OPTIMAL)
+S = 7
+Resultado da iteração s = 7 :(bound = -12.090234522321419, ncuts = 977, rounds = 19, total_time = 64.42244029999999, sep_time = 0.09796339999999999, final_time = 3.4742645, status = OPTIMAL)
+S = 8
+Resultado da iteração s = 8 :(bound = -14.12657084432873, ncuts = 1287, rounds = 22, total_time = 71.9363883, sep_time = 0.15715310000000002, final_time = 2.5691324, status = OPTIMAL)
+S = 9
+Resultado da iteração s = 9 :(bound = -16.22770058549823, ncuts = 1456, rounds = 20, total_time = 145.5080356, sep_time = 0.1529787, final_time = 7.3585867, status = OPTIMAL)
+S = 10
+Resultado da iteração s = 10 :(bound = -18.37920945742524, ncuts = 1897, rounds = 26, total_time = 278.06598829999996, sep_time = 0.7389705, final_time = 12.8873412, status = OPTIMAL)
+S = 11
+Resultado da iteração s = 11 :(bound = -20.59308863871987, ncuts = 2183, rounds = 27, total_time = 505.24159040000006, sep_time = 0.48851699999999987, final_time = 93.0297671, status = OPTIMAL)
+S = 12
+Resultado da iteração s = 12 :(bound = -22.877277688441378, ncuts = 2675, rounds = 28, total_time = 673.1247962, sep_time = 1.8376817, final_time = 33.1965883, status = OPTIMAL)
+S = 13
+Resultado da iteração s = 13 :(bound = -25.23627072764081, ncuts = 2903, rounds = 29, total_time = 1569.8236675, sep_time = 5.561441299999999, final_time = 92.4079552, status = OPTIMAL)
+S = 14
+Resultado da iteração s = 14 :(bound = -27.71443623280975, ncuts = 2665, rounds = 25, total_time = 1451.2312618, sep_time = 1.1919773, final_time = 107.9430268, status = OPTIMAL)

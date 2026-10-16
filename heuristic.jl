@@ -1,3 +1,13 @@
+"""
+Essa função calcula um lower bound para o MESPc
+
+#Argumentos
+- C : matriz de covariância
+- A : matriz de adjacência
+- s : tamanho da submatriz a ser selecionada
+
+#Saída: valor da função objetivo e tempo de execução
+"""
 function heuristic(C,A,s)
     n = size(C,1)
     init_t = time()

@@ -1,4 +1,12 @@
-#gerador de Matrizes(Grafos) Aleatórias
+"""
+Essa função cria matrizes aleatórias do modelo NP
+
+#Argumentos
+- n : número de vértices
+- p : probabilidade de haver aresta antre dois vértices (i,j)
+
+#Saída: matriz aleatória
+"""
 function NP_matrix(n,p)
     #[i+j for i in 1:3, j in 1:2]
     matrix = [0 for i in 1:n, j in 1:n]
@@ -14,7 +22,14 @@ function NP_matrix(n,p)
     return matrix
 end
 
-#clique maximo
+"""
+Essa função encontra cliques maximais de uma matriz utilizando maximal_cliques do modulo Graphs
+
+#Argumentos
+- ADJ_M : matriz de adjacência 
+
+#Saída: o tamanho da maior clique e o número de cliques maximais
+"""
 function max_clique(ADJ_M)
     GRAPH = SimpleGraph(ADJ_M)
     println("Grafo criado")
@@ -26,6 +41,15 @@ function max_clique(ADJ_M)
     return MAX_CLIQUE, length(cliques_max)
 end
 
+
+"""
+Essa função encontra o tamanho da maior clique de uma matriz
+
+#Argumentos
+- ADJ_M : matriz de adjacência 
+
+#Saída: o tamanho da maior clique
+"""
 function P_max_clique(ADJ_M)
     n = size(ADJ_M,1)
 
@@ -52,6 +76,14 @@ function P_max_clique(ADJ_M)
     return round(Int,objval)
 end
 
+"""
+Essa função cria a matriz complementar de uma matriz
+
+#Argumentos
+- ADJ_M : matriz de adjacência 
+
+#Saída: matriz_complementar
+"""
 function matrix_comp(ADJ_M)
     n = size(ADJ_M,1)
     COMP_M = [0 for i in 1:n, j in 1:n]
@@ -68,6 +100,14 @@ function matrix_comp(ADJ_M)
     return COMP_M
 end
 
+"""
+Essa função encontra cliques maximais de uma matriz utilizando maximal_cliques do modulo Graphs
+
+#Argumentos
+- ADJ_M : matriz de adjacência 
+
+#Saída: cliques maximais
+"""
 function max_cliques(ADJ_M)
     GRAPH = SimpleGraph(ADJ_M)
     CLIQUES = maximal_cliques(GRAPH)
@@ -76,7 +116,11 @@ function max_cliques(ADJ_M)
     return CLIQUES
 end
 
-
+"""
+Essa função é utilizada na restrição utilizada para modelar a função objetivo
+#Argumentos
+- A : matriz
+"""
 function lower_triangular_solver(A)
     return [A[i, j] for i = 1:size(A, 1) for j = 1:i]
 end

@@ -1,3 +1,15 @@
+"""
+Essa função adiciona todos os cortes de conjunto independente ao modelo,
+dada a matriz de adjacência
+
+#Argumentos
+- MODEL: modelo atual
+- X_m: matriz X
+- x_v: vetor x
+- ADJ_m: matriz de adjacência
+
+#Saída: Modelo com cortes adicionados
+"""
 function indep_set_cuts_ALL(MODEL, X_m, x_v, ADJ_m)
     n = length(x_v)
     if n == 200 max_cliques_comp = CUTS200;
@@ -31,8 +43,19 @@ function indep_set_cuts_ALL(MODEL, X_m, x_v, ADJ_m)
     return MODEL
 end
 
+"""
+Essa função encontra os cortes de conjunto independente de maneira exata
 
-function binary_indep_sets(X_m,ADJ_m, eps = 1e-3; ws = false, relax = false)#, warm_start = []
+#Argumentos
+- X_m: matriz X
+- ADJ_m: matriz de adjacência
+- eps: tolerância, default: 1e-3 
+- ws: warm_start (iniciar o problema exato com uma solução heurística), default: false 
+- relax: retira a orbigatoriedade de os conjuntos serem dados por vetores BINÁRIOS, default: false
+
+#Saída: conjunto de desigualdades válidas para o modelo atual
+"""
+function binary_indep_sets(X_m,ADJ_m, eps = 1e-3; ws = false, relax = false)
     n = size(X_m,1)
     x_BQP = diag(X_m);
     J = []
@@ -91,6 +114,19 @@ binary_warm_start(x, adj, eps = 1e-3) = binary_indep_sets(x, adj, eps, ws = true
 relax_indep_set(x, adj, eps = 1e-3) = binary_indep_sets(x, adj, eps, ws = false, relax = true)
 
 
+
+
+"""
+Essa função resolve o problema do conjunto independente máximo com peso utilizando uma heurística gulosa
+
+#Argumentos
+- graph_m: matriz de adjacência 
+- w: vetor de pesos
+- eps: tolerância, default: 1e-3 
+- advanced_search: ativa a busca local com 2 trocas, default: false
+
+#Saída: conjunto independente de maior peso encontrado de maneira heurística
+"""
 function greedy_heuristic(graph_m, w, eps = 1e-3; advanced_search = false)
     n = size(w)[1]
     S = Int[]
@@ -233,7 +269,17 @@ function greedy_heuristic(graph_m, w, eps = 1e-3; advanced_search = false)
 end
 
 
+"""
+Essa função encontra os cortes de conjunto independente de maneira heurpistica
 
+#Argumentos
+- X_m: matriz X
+- ADJ_m: matriz de adjacência
+- eps: tolerância, default: 1e-3 
+- advanced_search: ativa a busca local com 2 trocas da função greedy_heuristic, default: false
+
+#Saída: conjunto de desigualdades válidas para o modelo atual
+"""
 function greedy_indep_sets(X_m, ADJ_m, eps = 1e-3; advanced_search = false)
     n = size(X_m, 1)
     x_v = diag(X_m)
@@ -271,7 +317,19 @@ greedy12(x, adj, eps = 1e-3) = greedy_indep_sets(x, adj,  eps, advanced_search =
 
 
 
+"""
+Essa função adiciona cortes de McCormick de maneira iterativa ao modelo
 
+#Argumentos
+- MODEL: modelo atual
+- W_var: valor atual da matriz X
+- X_m: matriz variável X
+- x_v: vetor variável x
+- eps: tolerância, default: 1e-2 
+- lim_k: limite de cortes a serem adicionados, default: 500
+
+#Saída: Modelo com cortes adicionados e um parâmetro indicando se houve adição de novos cortes
+"""
 function mccormick_IT(MODEL, W_var, X_m, x_v, eps = 1e-2, lim_k = 500) #acho que posso diminuir, porque o IT12ITMC ficou igual com lim_k igual a 200
     X = W_var[2:end, 2:end]
     x = W_var[2:end, 1]
@@ -291,7 +349,6 @@ function mccormick_IT(MODEL, W_var, X_m, x_v, eps = 1e-2, lim_k = 500) #acho que
         end
     end
     l_vc = length(violated_cuts)
-    #println("encontrei $l_vc violated cuts no McCormick It")
     if l_vc > 0 violated = sort(violated_cuts, rev=true)
     else return MODEL, 0 end
     if l_vc < lim_k lim_k = l_vc end
@@ -327,7 +384,16 @@ function mccormick_IT2(MODEL, W_var, X_m, x_v, eps = 1e-3)
 end
 
 
+"""
+Essa função adiciona todos os cortes de McCormick ao modelo
 
+#Argumentos
+- MODEL: modelo atual
+- X_m: matriz X
+- x_v: vetor x
+
+#Saída: Modelo com cortes adicionados
+"""
 function mccormick_ALL(MODEL, X_m, x_v)
     n = length(x_v)
 
@@ -342,7 +408,17 @@ function mccormick_ALL(MODEL, X_m, x_v)
     return MODEL
 end
 
-function mccormick_tri(MODEL, X_m, x_v)
+"""
+Essa função adiciona todos os cortes Triangulares ao modelo
+
+#Argumentos
+- MODEL: modelo atual
+- X_m: matriz X
+- x_v: vetor x
+
+#Saída: Modelo com cortes adicionados
+"""
+function triangle(MODEL, X_m, x_v)
     n = length(x_v)
     for i in 1:n
         for j in (i + 1):n
@@ -363,8 +439,17 @@ end
 
 
 
+"""
+Essa função adiciona todos os cortes de McCormick e Triangulares ao modelo
 
-function mccormick_ALL_tri(MODEL, X_m, x_v)
+#Argumentos
+- MODEL: modelo atual
+- X_m: matriz X
+- x_v: vetor x
+
+#Saída: Modelo com cortes adicionados
+"""
+function mccormick_triangle(MODEL, X_m, x_v)
     n = length(x_v)
     for i in 1:n
         for j in (i + 1):n
@@ -384,7 +469,16 @@ function mccormick_ALL_tri(MODEL, X_m, x_v)
 end
 
 
+"""
+Essa função encontra os cortes de conjunto independente do modelo linxc
 
+#Argumentos
+- X_V: matriz variável X
+- ADJ_m: matrzi de adjacência
+- eps: tolerância, default = 1e-3
+
+#Saída: corte
+"""
 function linx_cuts(X_V, ADJ_m, eps = 1e-3)
     n = size(X_V,1)
     J = []

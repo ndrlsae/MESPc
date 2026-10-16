@@ -1,3 +1,12 @@
+"""
+Essa função constrói o modelo linx e devolve o modelo e o vetor variável x
+
+#Argumentos
+- C : matriz de covariância
+- s : tamanho da submatriz selecionada
+- gamma: fator de escala
+- OPTM : Otimizador a ser usado, padrão: SCS.Optmizer
+"""
 function LINX(C, s, gamma, OPTM = SCS.Optimizer)
     n = size(C,1)
     title = "linx"
@@ -28,6 +37,17 @@ function LINX(C, s, gamma, OPTM = SCS.Optimizer)
     return model, x
 end
 
+
+"""
+Essa função constrói o modelo linxX e devolve o modelo e a matriz variável W
+
+#Argumentos
+- C : matriz de covariância
+- s : tamanho da submatriz selecionada
+- gamma: fator de escala
+- A : matriz de adjacência
+- OPTM : Otimizador a ser usado, padrão: SCS.Optmizer
+"""
 function LINXX(C, s, gamma, A, OPTM = SCS.Optimizer)
     n = size(C,1)
     title = "linxX"
@@ -67,6 +87,21 @@ function LINXX(C, s, gamma, A, OPTM = SCS.Optimizer)
 end
 
 
+
+"""
+Essa função resolve modelos linx, linxc ou linxX e devolve as informações definidas no output
+
+#Argumentos
+- C : matriz de covariância
+- s : tamanho da submatriz selecionada
+- gamma: fator de escala
+- A : matriz de adjacência
+- X_M : indica se estamos em linx ou linxX, default: false
+- Ineq : lista de tipos desigualdades a serem adicionadas, padrão: [false]
+- output: informações a serem retornadas, padrão: ["obj","X_m", "x_v","t_f"]
+- eps: tolerância, padrão: 1e-3
+- OPTM : Otimizador a ser usado, padrão: SCS.Optmizer
+"""
 function solverLINX(C,s,gamma, A = false, X_M = false, INEQ = [false] ,
                     output = ["obj","x_v","t_f"], eps = 1e-3, OPTM = SCS.Optimizer)
     n = size(C,1);

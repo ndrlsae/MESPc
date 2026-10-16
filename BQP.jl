@@ -1,3 +1,13 @@
+"""
+Essa função constrói os modelos BQP ou BQPc e devolve o modelo e a matriz variável W
+
+#Argumentos
+- C : matriz de covariância
+- s : tamanho da submatriz selecionada
+- gamma: fator de escala
+- A : matriz de adjacência
+- OPTM : Otimizador a ser usado, padrão: SCS.Optmizer
+"""
 function BQP(C,s,gamma, A = false, OPTM = SCS.Optimizer)
     n = size(C,1);
     title = "BQP"
@@ -45,10 +55,24 @@ function BQP(C,s,gamma, A = false, OPTM = SCS.Optimizer)
 end
 
 
+"""
+Essa função resolve modelos BQP ou BQPc e devolve as informações definidas em output
+
+#Argumentos
+- C : matriz de covariância
+- s : tamanho da submatriz selecionada
+- gamma: fator de escala
+- A : matriz de adjacência
+- Ineq : lista de tipos desigualdades a serem adicionadas, padrão: [false]
+- output: informações a serem retornadas, padrão: ["obj","X_m", "x_v","t_f"]
+- eps: tolerância, padrão: 1e-3
+- OPTM : Otimizador a ser usado, padrão: SCS.Optmizer
+
+
+"""
 function solverBQP(C,s,gamma, A = false, Ineq = [false], 
                         output = ["obj","X_m", "x_v","t_f"], eps = 1e-3, OPTM = SCS.Optimizer)
     n = size(C,1);
-    #println("Usando $OPTM")
     #model
     init_t = time()
     model, W = BQP(C,s,gamma, A, OPTM)
@@ -58,7 +82,6 @@ function solverBQP(C,s,gamma, A = false, Ineq = [false],
     x = W[2:end, 1]
     
     n_cuts0 = num_constraints(model, count_variable_in_set_constraints = false)
-    #println("num initial of constraints: ", n_cuts0)
 
     if Ineq[1] == "all"
         for ineq in Ineq[2:end]
@@ -101,37 +124,27 @@ function solverBQP(C,s,gamma, A = false, Ineq = [false],
                 if Ineq[2] == "Indep_Set21" sets_function = greedy_indep_sets; end
                 if Ineq[2] == "Indep_Set2" sets_function = greedy_indep_sets2; end
             J = sets_function(X_m,A, eps)
-            #println(length(J))
             while length(J) > 0
-                #println(length(J))
                 for l in J
-                    #println(l)
                     id = l[1]
                     x_sub = l[2]
                     x_1 = [i for i in 1:36 if 1 - eps < x_sub[i] < 1+ eps]
-                    #println(id," : ",x_1)
                     if id == 0
                         x_tilda = [x[i] for i in 1:n if x_sub[i] > 0.99]
-                        #println(x_tilda)
                         @constraint(model, sum(x_tilda )<= 1)
-                        #@constraint(model, x'*x_sub <= 1)
                     else
                         X_tilda = [X[id,i] for i in 1:n if x_sub[i]>0.99]
-                        #println(X_tilda)
                         @constraint(model, sum(X_tilda) <= x[id]);
-                        #@constraint(model, X[id,:]'*x_sub <= x[id]);
                     end
                 end
                 JuMP.optimize!(model);
                 W_v = value.(W);
                 X_m = W_v[2:end,2:end];
                 x_BQP = W_v[2:end, 1];
-                #x_BQP = diag(X_m);
                 J = sets_function(X_m,A)
             end
         end
     end
-    #println("TESTE")
     n_cuts = num_constraints(model, count_variable_in_set_constraints = false)
     
     println(title)
@@ -153,7 +166,7 @@ function solverBQP(C,s,gamma, A = false, Ineq = [false],
     println(termination_status(model))
     println(title," ", s, ": f_obj ",objval," em ", delta_t, "s, com tempo final = ", delta, "s")
     out = []
-    for info in output #["obj","X_m", "x_v","t_f"]
+    for info in output #["obj","X_m", "x_v","t_f"
         if info == "obj" push!(out,objval)
         elseif info == "X_m" push!(out,X)
         elseif info == "x_v" push!(out,x)

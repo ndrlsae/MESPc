@@ -1,3 +1,16 @@
+"""
+Essa função resolve qualquer modelo e devolve as informações definidas em output
+
+#Argumentos
+- method: string nomeando o método a ser utilizado
+- params: parâmetros necessários para o modelo em questão (matriz de covariância, matriz de adjacência)
+- s : tamanho da submatriz selecionada
+- gamma: fator de escala
+- INEQ : lista de tipos desigualdades a serem adicionadas, padrão: []
+- OPTM : Otimizador a ser usado, padrão: SCS.Optmizer
+- output: informações a serem retornadas, padrão: ["obj","X_m", "x_v","t_f"]
+- eps: tolerância, padrão: 1e-3
+"""
 function solver(method, params, s, gamma, INEQ = [],
                 OPTM = SCS.Optimizer,output = ["obj","X_m", "x_v","t_f"], eps = 1e-3)
     init_t = time()
@@ -54,8 +67,8 @@ function solver(method, params, s, gamma, INEQ = [],
         ineq = uppercase(ineq)
         if ineq == "MCCORMICK_ALL" model = mccormick_ALL(model, X, x);#All(2) McCormick
             
-        elseif ineq == "MCCORMICK_ALL_TRI" model = mccormick_ALL_tri(model, X, x);#All(2+3) McCormick
-        elseif ineq == "MCCORMICK_TRI" model = mccormick_tri(model, X, x);#All(3) McCormick
+        elseif ineq == "MCCORMICK_TRIANGLE" model = mccormick_triangle(model, X, x);#All(2+3) McCormick
+        elseif ineq == "TRIANGLE" model = triangle(model, X, x);#All(3) McCormick
             
         elseif ineq == "INDEPSETS_ALL" model =  indep_set_cuts_ALL(model, X, x, A); #All Indep Sets
         
@@ -121,6 +134,22 @@ function solver(method, params, s, gamma, INEQ = [],
     return out
 end
 
+
+
+"""
+Essa função adiciona cortes de maneira iterativa, dada a função de busca de cortes válidos
+
+#Argumentos
+- MODEL: modelo atual
+- sets_function: função utilizada para encontrar conjuntos independentes
+- W_var: matriz variável W
+- A_matrix: matriz de adjacência
+- eps: tolerância, padrão: 1e-3
+- lim_it: limite de iterações
+
+#Saída: Modelo com cortes adicionados 
+        *(+ a lista de valores da função objetivo para estudar a convergência)
+"""
 function INEQ_IT(MODEL, sets_function, W_var, A_matrix, eps = 1e-3, lim_it = 20)
     n = size(A_matrix,1)
     X = W_var[2:end, 2:end]
@@ -154,6 +183,21 @@ function INEQ_IT(MODEL, sets_function, W_var, A_matrix, eps = 1e-3, lim_it = 20)
     return MODEL, list_obj
 end
 
+
+"""
+Essa função adiciona cortes de McCormick de maneira iterativa
+
+#Argumentos
+- MODEL: modelo atual
+- W_var: matriz variável W
+- X_m: matriz X atual
+- x_v: vetor x atual
+- eps: tolerância, padrão: 1e-3
+- lim_it: limite de iterações, default: 70
+- lim_k: limite de cortes adicionados por iteração, default: 500
+
+#Saída: Modelo com cortes adicionados 
+"""
 function INEQ_IT_MC(MODEL, W_var, X_m, x_v, eps = 1e-2, lim_it = 70, lim_k = 500)
     delta, it = 1,0
     while delta == 1 && it < lim_it
@@ -170,6 +214,23 @@ function INEQ_IT_MC(MODEL, W_var, X_m, x_v, eps = 1e-2, lim_it = 70, lim_k = 500
     return MODEL
 end
 
+"""
+Essa função adiciona cortes de McCormick e cortes de conjunto independente de maneira iterativa, 
+dada a função de busca de cortes válidos
+
+#Argumentos
+- MODEL: modelo atual
+- sets_function: função utilizada para encontrar conjuntos independentes
+- W_var: matriz variável W
+- X_m: matriz X atual
+- A: matriz de adjacência
+- x_v: vetor x atual
+- eps: tolerância, padrão: 1e-2
+- lim_it: limite de iterações, default: 500
+- lim_k: limite de cortes adicionados por iteração, default: 500
+
+#Saída: Modelo com cortes adicionados 
+"""
 function INDEP_IT_MC(MODEL, sets_function, W_var, X_m, A, x_v, eps = 1e-2, lim_it = 500, lim_k = 500)
     for _ in 1:lim_it
         MODEL,delta = mccormick_IT(MODEL,W_var, X_m,x_v, eps, lim_k) 

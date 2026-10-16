@@ -28,7 +28,17 @@ function info_subprob_gamma_bqp(X,x,C,s,gamma)
     return AUX1,invF1,res
 end
 
+"""
+Essa função calcula o valor de gamma (fator de escala do MESPc) para BQP e BQPc
 
+#Argumentos
+- C : matriz de covariância
+- s : tamanho da submatriz selecionada
+- A : matriz de adjacência, default: false
+- gamma_init: fator de escala inicial, default: false
+
+#Saída: gamma
+"""
 function compute_gamma_bqp(C,s, A=false, gamma_init=false, tol = 5e-2,RLT = false)
     n = size(C,1); iter = 0; max_iter = MAX_ITER; 
     # ; # Tolerance for residual and duality gap  
@@ -122,6 +132,18 @@ function info_subprob_gamma_linx(x,C,s,gamma)
     return AUX1,invF1,res
 end
 
+
+"""
+Essa função calcula o valor de gamma (fator de escala do MESPc) para linx e linxX
+
+#Argumentos
+- C : matriz de covariância
+- s : tamanho da submatriz selecionada
+- A : matriz de adjacência, default: false
+- gamma_init: fator de escala inicial, default: false
+
+#Saída: gamma
+"""
 function compute_gamma_linx(C,s, A=false, gamma_init=false, tol = 5e-2,RLT = false)
     n = size(C,1); iter = 0; max_iter = MAX_ITER; 
     # ; # Tolerance for residual and duality gap  
@@ -192,7 +214,17 @@ function compute_gamma_linx(C,s, A=false, gamma_init=false, tol = 5e-2,RLT = fal
 end
 
 
+"""
+Essa função calcula o valor de gamma (fator de escala do MESPc) para linxc
 
+#Argumentos
+- C : matriz de covariância
+- s : tamanho da submatriz selecionada
+- A : matriz de adjacência, default: false
+- gamma_init: fator de escala inicial, default: false
+
+#Saída: gamma
+"""
 function compute_gamma_linxc(C,s, A=false, gamma_init=false, tol = 5e-2,RLT = false)
     n = size(C,1); iter = 0; max_iter = MAX_ITER; 
     # ; # Tolerance for residual and duality gap  
